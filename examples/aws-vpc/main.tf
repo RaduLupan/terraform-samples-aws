@@ -1,11 +1,11 @@
 terraform {
   required_version = ">= 0.12"
-  backend "s3" {
-    bucket         = "terraform-state-dev-us-east-2-fkaymsvstthc"
-    key            = "global/s3/terraform.tfstate"
-    region         = "us-east-2"
-    dynamodb_table = "terraform-locks-dev-us-east-2"
-    encrypt        = true
+  
+  # Partial configuration. The other arguments i.e. bucket, region, will be passed in from backend.hcl file 
+  # via terraform init -backend-config ../../backend.hcl.
+  # Variables are not allowed in the backend block!
+  backend "s3" {  
+    key            = "tf-samples-vpc/terraform.tfstate"
   }
 }
 provider "aws" {
@@ -22,8 +22,9 @@ resource "aws_vpc" "main" {
   instance_tenancy = "default"
 
   tags = {
-    Name = "vpc-${local.project}-${var.environment}-${var.region}"
+    Name        = "vpc-${local.project}-${var.environment}-${var.region}"
     environment = var.environment
+    terraform   = true
   }
 }
 
