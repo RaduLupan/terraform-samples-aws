@@ -68,3 +68,85 @@ resource "aws_subnet" "private_subnet" {
 
   }
 }
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name        = "igw-${local.project}-${var.environment}-${var.region}"
+    environment = var.environment
+    terraform   = true
+  }
+}
+
+resource "aws_route_table" "public_subnet_route_table" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name        = "rt-public-subnets-all"
+    environment = var.environment
+    terraform   = true
+  }
+}
+
+resource "aws_route_table" "private_subnet_route_table" {
+  count = length(data.aws_availability_zones.available.names)
+  
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name        = "rt-private-subnets-${data.aws_availability_zones.available.names[count.index]}"
+    environment = var.environment
+    terraform   = true
+  }
+}
+
+resource "aws_route" "route_public" {
+  route_table_id            = aws_route_table.public_subnet_route_table.id
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id                = aws_internet_gateway.igw.id
+  depends_on                = [aws_route_table.public_subnet_route_table]
+}
+
+# Associates all public subnets to the public-subnets-all route table.
+resource "aws_route_table_association" "rta_public" {
+  count = length(data.aws_availability_zones.available.names)
+
+  subnet_id      = aws_subnet.public_subnet["${count.index}"].id
+  route_table_id = aws_route_table.public_subnet_route_table.id
+}
+
+# Associates each private subnet to its route table in corresponding availability zone.
+resource "aws_route_table_association" "rta_private" {
+  count = length(data.aws_availability_zones.available.names)
+
+  subnet_id      = aws_subnet.private_subnet["${count.index}"].id
+  route_table_id = aws_route_table.private_subnet_route_table["${count.index}"].id
+}
+
+# Deploys 1 x EIP in each availability zone to be attached to the NAT Gateway
+resource "aws_eip" "eip_natgw" {
+  count = length(data.aws_availability_zones.available.names)
+  vpc      = true
+
+  tags = {
+    Name        = "eip-natgw-${data.aws_availability_zones.available.names[count.index]}"
+    environment = var.environment
+    terraform   = true
+  }
+}
+
+# Deploys 1 x NATGW in each public subnet.
+resource "aws_nat_gateway" "natgw" {
+  count = length(data.aws_availability_zones.available.names)
+  
+  allocation_id = aws_eip.eip_natgw["${count.index}"].id
+  subnet_id     = aws_subnet.public_subnet["${count.index}"].id
+
+  tags = {
+    Name        = "natgw-${data.aws_availability_zones.available.names[count.index]}"
+    environment = var.environment
+    terraform   = true
+  }
+}
+
