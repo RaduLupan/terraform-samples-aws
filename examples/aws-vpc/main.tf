@@ -1,3 +1,10 @@
+# This template deploys the following resources in AWS:
+# 1 x VPC with 1 x public subnet and 1 x private subnet in each availability zone in the region
+# 1 x Internet Gateway attached to the VPC
+# 1 x NAT Gateway with Elastic IP in each availability zone in the region
+# 1 x Route Table for all public subnets with default route pointing to IGW
+# 1 x Route Table for each private subnet with default route pointing to NAT Gateway
+
 terraform {
   required_version = ">= 0.12"
   
@@ -101,6 +108,7 @@ resource "aws_route_table" "private_subnet_route_table" {
   }
 }
 
+# Deploys default route in the public route table pointing to the Internet Gateway
 resource "aws_route" "route_public" {
   route_table_id            = aws_route_table.public_subnet_route_table.id
   destination_cidr_block    = "0.0.0.0/0"
@@ -124,7 +132,7 @@ resource "aws_route_table_association" "rta_private" {
   route_table_id = aws_route_table.private_subnet_route_table["${count.index}"].id
 }
 
-# Deploys 1 x EIP in each availability zone to be attached to the NAT Gateway
+# Deploys 1 x Elastic IP in each availability zone to be attached to the NAT Gateway in that AZ.
 resource "aws_eip" "eip_natgw" {
   count = length(data.aws_availability_zones.available.names)
   vpc      = true
@@ -136,7 +144,7 @@ resource "aws_eip" "eip_natgw" {
   }
 }
 
-# Deploys 1 x NATGW in each public subnet.
+# Deploys 1 x NAT Gateway in each public subnet and attaches the corresponding EIP to it.
 resource "aws_nat_gateway" "natgw" {
   count = length(data.aws_availability_zones.available.names)
   
@@ -150,3 +158,11 @@ resource "aws_nat_gateway" "natgw" {
   }
 }
 
+# Deploys default routes in all private route tables pointing the corresponding NAT Gateway.
+resource "aws_route" "route_private" {
+  count = length(data.aws_availability_zones.available.names)
+  route_table_id            = aws_route_table.private_subnet_route_table["${count.index}"].id
+  destination_cidr_block    = "0.0.0.0/0"
+  nat_gateway_id            = aws_nat_gateway.natgw["${count.index}"].id
+  depends_on                = [aws_route_table.private_subnet_route_table]
+}
