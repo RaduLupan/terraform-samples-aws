@@ -76,6 +76,7 @@ resource "aws_subnet" "private_subnet" {
   }
 }
 
+# Deploys Internet Gateway and attaches to VPC
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
@@ -86,6 +87,7 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
+# Deploys one route table for all public subnets
 resource "aws_route_table" "public_subnet_route_table" {
   vpc_id = aws_vpc.main.id
 
@@ -96,6 +98,7 @@ resource "aws_route_table" "public_subnet_route_table" {
   }
 }
 
+# Deploys array of route tables: one for each private subnet
 resource "aws_route_table" "private_subnet_route_table" {
   count = length(data.aws_availability_zones.available.names)
   
