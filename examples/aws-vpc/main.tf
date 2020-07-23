@@ -55,6 +55,7 @@ resource "aws_subnet" "public_subnet" {
   tags = {
     Name        = "public-${cidrsubnet(var.vpcCidr,8,count.index)}"
     environment = var.environment
+    tier        = "public"
     terraform   = true
   }
 }
@@ -71,6 +72,7 @@ resource "aws_subnet" "private_subnet" {
   tags = {
     Name        = "private-${cidrsubnet(var.vpcCidr,8,(count.index+length(data.aws_availability_zones.available.names)))}"
     environment = var.environment
+    tier        = "private"
     terraform   = true
 
   }
