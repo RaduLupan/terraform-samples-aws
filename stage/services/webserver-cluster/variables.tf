@@ -22,5 +22,4 @@ variable "instance_type" {
 variable "server_port" {
     description = "Internal server port for HTTP"
     type        = number
-    default     = 8080
 }
