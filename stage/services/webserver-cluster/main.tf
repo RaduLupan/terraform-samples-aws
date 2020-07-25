@@ -1,5 +1,11 @@
 terraform {
     required_version = ">= 0.12"
+
+    # Partial configuration.  
+    # terraform init -backend-config ../../../backend.hcl will initialize the remote backend.
+    backend "s3" {  
+        key            = "stage/services/webserver-cluster/terraform.tfstate"
+    }
 }
 provider "aws" {
     version = "2.70.0"
