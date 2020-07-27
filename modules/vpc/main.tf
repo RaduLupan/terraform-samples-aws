@@ -1,9 +1,9 @@
 # This template deploys the following resources in AWS:
-# 1 x VPC with 1 x public subnet and 1 x private subnet in each availability zone in the region
-# 1 x Internet Gateway attached to the VPC
-# 1 x NAT Gateway with Elastic IP in each availability zone in the region
-# 1 x Route Table for all public subnets with default route pointing to IGW
-# 1 x Route Table for each private subnet with default route pointing to NAT Gateway
+# - 1 x VPC with 1 x public subnet and 1 x private subnet in each availability zone in the region
+# - 1 x Internet Gateway attached to the VPC
+# - 1 x NAT Gateway with Elastic IP in each availability zone in the region
+# - 1 x Route Table for all public subnets with default route pointing to IGW
+# - 1 x Route Table for each private subnet with default route pointing to NAT Gateway
 
 locals {
     project = "terraform-samples"
