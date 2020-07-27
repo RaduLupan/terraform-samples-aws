@@ -20,6 +20,7 @@ data "terraform_remote_state" "db" {
     }
 }
 
+# Calculated local values based on data sets.
 locals {
   vpc_id     = data.terraform_remote_state.vpc.outputs.vpc-id
   db_address = data.terraform_remote_state.db.outputs.db-endpoint
@@ -27,8 +28,8 @@ locals {
 }
 
 # Deploys a security group for the launch configuration with ingress rule to allow http traffic.
-resource "aws_security_group" "allow_http" {
-  name        = "allow-http-sg"
+resource "aws_security_group" "launch_config" {
+  name        = "${var.cluster_name}-ec2-sg"
   description = "Allow HTTP inbound traffic"
   vpc_id      = local.vpc_id
 
@@ -55,8 +56,8 @@ resource "aws_security_group" "allow_http" {
 }
 
 # Deploys a security group for the Application Load Balancer with ingress rule to allow http traffic.
-resource "aws_security_group" "sg_alb_web" {
-  name        = "alb-web-sg"
+resource "aws_security_group" "alb" {
+  name        = "${var.cluster_name}-alb-sg"
   description = "Allow HTTP inbound traffic"
   vpc_id      = local.vpc_id
 
@@ -112,10 +113,10 @@ data "template_file" "user_data" {
 
 # Deploys launch configuration for the web auto scaling group.
 resource "aws_launch_configuration" "asg_launch_config" {
-  name_prefix     = "lc-web-"
+  name_prefix     = "lc-${var.cluster_name}-"
   image_id        = data.aws_ami.ubuntu.id
   instance_type   = var.instance_type
-  security_groups = [aws_security_group.allow_http.id] 
+  security_groups = [aws_security_group.launch_config.id] 
   user_data       = data.template_file.user_data.rendered
 
   # Required when using a launch configuration with an auto scaling group.
@@ -134,12 +135,12 @@ data "aws_subnet_ids" "private_subnet" {
   }
 }
 
-resource "aws_autoscaling_group" "asg_web" {
+resource "aws_autoscaling_group" "web" {
     launch_configuration = aws_launch_configuration.asg_launch_config.name
     # The list of private subnet IDs provided by the data source is fed to the vpc_zone_identifier argument.
     vpc_zone_identifier  = data.aws_subnet_ids.private_subnet.ids
 
-    target_group_arns = [aws_lb_target_group.tg_alb_web.arn]
+    target_group_arns = [aws_lb_target_group.web.arn]
     health_check_type = "ELB"
  
     min_size = 2
@@ -147,7 +148,7 @@ resource "aws_autoscaling_group" "asg_web" {
 
     tag {
         key                 = "Name"
-        value               = "terraform-web-asg"      
+        value               = "${var.cluster_name}-instance"      
         propagate_at_launch = true
     }
 }
@@ -162,17 +163,17 @@ data "aws_subnet_ids" "public_subnet" {
 }
 
 # Deploys Application Load Balancer.
-resource "aws_lb" "alb_web" {
-    name               = "terraform-web-alb"
+resource "aws_lb" "web" {
+    name               = "${var.cluster_name}-alb"
     load_balancer_type = "application"
     # The list of public subnet IDs provided by the data source is fed to the subnets argument.
     subnets            = data.aws_subnet_ids.public_subnet.ids
-    security_groups    = [aws_security_group.sg_alb_web.id]
+    security_groups    = [aws_security_group.alb.id]
 }
 
 # Deploys http listener.
 resource "aws_lb_listener" "http" {
-    load_balancer_arn = aws_lb.alb_web.arn
+    load_balancer_arn = aws_lb.web.arn
     port              = 80
     protocol          = "HTTP"
 
@@ -189,8 +190,8 @@ resource "aws_lb_listener" "http" {
 }
 
 # Deploys target group with health check.
-resource "aws_lb_target_group" "tg_alb_web" {
-    name     = "terraform-web-tg"
+resource "aws_lb_target_group" "web" {
+    name     = "${var.cluster_name}-tg"
     port     = var.server_port
     protocol = "HTTP"
     vpc_id   = data.terraform_remote_state.vpc.outputs.vpc-id
@@ -219,6 +220,6 @@ resource "aws_lb_listener_rule" "rule" {
 
     action {
         type = "forward"
-        target_group_arn = aws_lb_target_group.tg_alb_web.arn
+        target_group_arn = aws_lb_target_group.web.arn
     }
 }

@@ -9,6 +9,11 @@ variable "environment" {
     type          = string
 }
 
+variable "cluster_name" {
+    description   = "The name to use for all the cluster resources" 
+    type          = string
+}
+
 variable "vpc_remote_state_bucket" {
     description = "The name of the S3 bucket for the VPC's remote state"
     type        = string

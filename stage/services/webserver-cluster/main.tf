@@ -19,6 +19,7 @@ module "webserver-cluster" {
     
     region                  = var.region
     environment             = "stage"
+    cluster_name            = "terraform-web"
     vpc_remote_state_bucket = "terraform-state-dev-us-east-2-fkaymsvstthc"
     vpc_remote_state_key    = "stage/vpc/terraform.tfstate"
     db_remote_state_bucket  = "terraform-state-dev-us-east-2-fkaymsvstthc"
