@@ -25,11 +25,16 @@ data "terraform_remote_state" "db" {
     }
 }
 
-# Calculated local values based on data sets.
+# Calculated local values.
 locals {
-  vpc_id     = data.terraform_remote_state.vpc.outputs.vpc-id
-  db_address = data.terraform_remote_state.db.outputs.db-endpoint
-  db_port    = data.terraform_remote_state.db.outputs.port
+  vpc_id       = data.terraform_remote_state.vpc.outputs.vpc-id
+  db_address   = data.terraform_remote_state.db.outputs.db-endpoint
+  db_port      = data.terraform_remote_state.db.outputs.port
+  http_port    = 80
+  any_port     = 0
+  any_protocol = "-1"
+  tcp_protocol = "tcp"
+  all_ips      = ["0.0.0.0/0"]
 }
 
 # Deploys a security group for the launch configuration with ingress rule to allow http traffic.
@@ -41,16 +46,16 @@ resource "aws_security_group" "launch_config" {
   ingress {
     from_port   = var.server_port
     to_port     = var.server_port
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = local.tcp_protocol
+    cidr_blocks = local.all_ips
   }
   
   ## Allow all outbound requests. Unlike creating an SG in the AWS console, egress rules are NOT automatically created!
   egress {
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
+      from_port   = local.any_port
+      to_port     = local.any_port
+      protocol    = local.any_protocol
+      cidr_blocks = local.all_ips
   }
 
   tags = {
@@ -67,18 +72,18 @@ resource "aws_security_group" "alb" {
   vpc_id      = local.vpc_id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = local.http_port
+    to_port     = local.http_port
+    protocol    = local.tcp_protocol
+    cidr_blocks = local.all_ips
   }
 
 ## Allow all outbound requests. Unlike creating an SG in the AWS console, egress rules are NOT automatically created!
   egress {
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
+      from_port   = local.any_port
+      to_port     = local.any_port
+      protocol    = local.any_protocol
+      cidr_blocks = local.all_ips
   }
 
   tags = {
@@ -179,7 +184,7 @@ resource "aws_lb" "web" {
 # Deploys http listener.
 resource "aws_lb_listener" "http" {
     load_balancer_arn = aws_lb.web.arn
-    port              = 80
+    port              = local.http_port
     protocol          = "HTTP"
 
     # By default, return a simple 404 page
