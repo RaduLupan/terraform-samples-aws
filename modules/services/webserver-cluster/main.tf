@@ -1,18 +1,36 @@
-terraform {
-    required_version = ">= 0.12"
+# Use this data source to get the VPC Id output from the remote state file of the vpc module.
+data "terraform_remote_state" "vpc" {
+    backend = "s3"
 
-    # Partial configuration.  
-    # terraform init -backend-config ../../../backend.hcl will initialize the remote backend.
-    backend "s3" {  
-        key            = "stage/services/webserver-cluster/terraform.tfstate"
+    config = {
+        bucket = var.vpc_remote_state_bucket
+        key    = var.vpc_remote_state_key
+        region = var.region
     }
+}
+
+# Use this data source to get the db-endpoint and port outputs from the remote state file of the mysql module.
+data "terraform_remote_state" "db" {
+    backend = "s3"
+
+    config = {
+        bucket = var.db_remote_state_bucket
+        key    = var.db_remote_state_key
+        region = var.region
+    }
+}
+
+locals {
+  vpc_id     = data.terraform_remote_state.vpc.outputs.vpc-id
+  db_address = data.terraform_remote_state.db.outputs.db-endpoint
+  db_port    = data.terraform_remote_state.db.outputs.port
 }
 
 # Deploys a security group for the launch configuration with ingress rule to allow http traffic.
 resource "aws_security_group" "allow_http" {
   name        = "allow-http-sg"
   description = "Allow HTTP inbound traffic"
-  vpc_id      = var.vpc_id
+  vpc_id      = local.vpc_id
 
   ingress {
     from_port   = var.server_port
@@ -40,7 +58,7 @@ resource "aws_security_group" "allow_http" {
 resource "aws_security_group" "sg_alb_web" {
   name        = "alb-web-sg"
   description = "Allow HTTP inbound traffic"
-  vpc_id      = var.vpc_id
+  vpc_id      = local.vpc_id
 
   ingress {
     from_port   = 80
@@ -81,24 +99,14 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-data "terraform_remote_state" "db" {
-    backend = "s3"
-
-    config = {
-        bucket = "terraform-state-dev-us-east-2-fkaymsvstthc"
-        key    = "stage/data-stores/mysql/terraform.tfstate"
-        region = "us-east-2"
-    }
-}
-
 # Use this data set to replace embedded bash scripts such as user_data with scripts that sit on different source.
 data "template_file" "user_data" {
-    template = file("user-data.sh")
+    template = file("${path.module}/user-data.sh")
 
     vars = {
         server_port = var.server_port
-        db_address  = data.terraform_remote_state.db.outputs.db-endpoint
-        db_port     = data.terraform_remote_state.db.outputs.port
+        db_address  = local.db_address
+        db_port     = local.db_port
     }
 }
 
@@ -119,7 +127,7 @@ resource "aws_launch_configuration" "asg_launch_config" {
 
 # Use this data source to provide the set of subnet IDs in our VPC that are tagged tier=private
 data "aws_subnet_ids" "private_subnet" {
-  vpc_id = var.vpc_id
+  vpc_id = local.vpc_id
 
   tags = {
     tier = "private"
@@ -146,7 +154,7 @@ resource "aws_autoscaling_group" "asg_web" {
 
 # Use this data source to provide the set of subnet IDs in our VPC that are tagged tier=public.
 data "aws_subnet_ids" "public_subnet" {
-  vpc_id = var.vpc_id
+  vpc_id = local.vpc_id
 
   tags = {
     tier = "public"
@@ -185,7 +193,7 @@ resource "aws_lb_target_group" "tg_alb_web" {
     name     = "terraform-web-tg"
     port     = var.server_port
     protocol = "HTTP"
-    vpc_id   = var.vpc_id
+    vpc_id   = data.terraform_remote_state.vpc.outputs.vpc-id
 
     health_check {
         path                = "/"
