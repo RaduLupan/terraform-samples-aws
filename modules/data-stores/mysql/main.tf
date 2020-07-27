@@ -1,3 +1,7 @@
+# This template deploys the following AWS resources:
+# - 1 x RDS instance running MySQL in a private subnet
+
+# Use this data source to get the VPC Id output from the remote state file of the vpc module.
 data "terraform_remote_state" "vpc" {
     backend = "s3"
 
@@ -8,6 +12,7 @@ data "terraform_remote_state" "vpc" {
     }
 }
 
+# Calculated local values based on data sets.
 locals {
   vpc_id = data.terraform_remote_state.vpc.outputs.vpc-id
 }
@@ -21,6 +26,7 @@ data "aws_subnet_ids" "private_subnet" {
   }
 }
 
+# Deploys DB subnet group consisting of all the private subnets in the VPC.
 resource "aws_db_subnet_group" "default" {
   name       = "main"
   subnet_ids = data.aws_subnet_ids.private_subnet.ids
@@ -32,13 +38,15 @@ resource "aws_db_subnet_group" "default" {
   }
 }
 
+# Deploys RDS instance running MySQL in the private subnet group.
 resource "aws_db_instance" "db1" {
     identifier_prefix    = "terraform-samples"
     engine               = "mysql"
-    allocated_storage    = 10
-    instance_class       = "db.t2.micro"
-    name                 = "web_db"
+    allocated_storage    = var.allocated_storage_gb
+    instance_class       = var.instance_class
+    name                 = var.db_name
     username             = "awsadmin"
     password             = var.db_password
     db_subnet_group_name = aws_db_subnet_group.default.name
+    skip_final_snapshot  = true
 }
