@@ -143,8 +143,8 @@ resource "aws_autoscaling_group" "web" {
     target_group_arns = [aws_lb_target_group.web.arn]
     health_check_type = "ELB"
  
-    min_size = 2
-    max_size = 10
+    min_size = var.min_size
+    max_size = var.max_size
 
     tag {
         key                 = "Name"

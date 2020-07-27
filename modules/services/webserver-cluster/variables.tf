@@ -40,6 +40,16 @@ variable "instance_type" {
     default     = "t3.micro"
 }
 
+variable "min_size" {
+    description = "The minimum number of EC2 instances in the ASG"
+    type        = number
+}
+
+variable "max_size" {
+    description = "The maximum number of EC2 instances in the ASG"
+    type        = number
+}
+
 variable "server_port" {
     description = "Internal server port for HTTP"
     type        = number
