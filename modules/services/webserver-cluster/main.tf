@@ -1,3 +1,8 @@
+# This template deploys the following AWS resources:
+# - 1 x Auto Scaling Group of EC2 instances running Ubuntu (web servers)
+# - 1 x Target Group for HTTP protocol associated with the ASG
+# - 1 x Application Load Balancer with HTTP listener forwarding traffic to the Target Group
+
 # Use this data source to get the VPC Id output from the remote state file of the vpc module.
 data "terraform_remote_state" "vpc" {
     backend = "s3"
