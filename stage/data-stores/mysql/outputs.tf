@@ -1,9 +1,9 @@
+# Database endpoint output from mysql module
 output "db-endpoint" {
-    description = "Database endpoint"
-    value       = aws_db_instance.db1.address
+    value = module.mysql.db-endpoint
 }
 
+# The port output from mysql module
 output "port" {
-    description = "The port the database is listening on"
-    value = aws_db_instance.db1.port
+    value = module.mysql.port
 }
