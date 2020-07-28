@@ -1,8 +1,3 @@
-provider "aws" {
-    version = "2.70.0"
-    region  = var.region
-}
-
 terraform {
   required_version = ">= 0.12"
   
@@ -14,9 +9,21 @@ terraform {
   }
 }
 
+provider "aws" {
+    version = "2.70.0"
+    region  = var.region
+}
+
 module "webserver-cluster" {
-    source = "../../../modules/services/webserver-cluster"
+    # Local source
+    #source = "../../../modules/services/webserver-cluster"
     
+    # Github source - public repository. Note that the double-slash in the Git URL after the repository name is required.
+    # Also, the v0.0.1 tag had to be pushed using:
+    # git tag -a "v0.0.1" -m "First release"
+    # git push --follow-tags
+    source = "github.com/RaduLupan/terraform-samples-aws//modules/services/webserver-cluster?ref=v0.0.1"
+  
     region                  = var.region
     environment             = "stage"
     cluster_name            = "terraform-web"

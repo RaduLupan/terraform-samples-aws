@@ -1,12 +1,7 @@
-provider "aws" {
-    version = "2.70.0"
-    region  = var.region
-}
-
 terraform {
   required_version = ">= 0.12"
   
-  # Partial configuration. The other arguments i.e. bucket, region, will be passed in from backend.hcl file 
+  # Partial configuration. The other arguments i.e. bucket, region, will be passed in from backend.hcl file. 
   # via terraform init -backend-config ../../backend.hcl.
   # Variables are not allowed in the backend block!
   backend "s3" {  
@@ -14,8 +9,20 @@ terraform {
   }
 }
 
+provider "aws" {
+    version = "2.70.0"
+    region  = var.region
+}
+
 module "vpc" {
-    source = "../../modules/vpc"
+    # Local source.
+    # source = "../../modules/vpc"
+
+    # Github source - public repository. Note that the double-slash in the Git URL after the repository name is required.
+    # Also, the v0.0.1 tag had to be pushed using:
+    # git tag -a "v0.0.1" -m "First release"
+    # git push --follow-tags
+    source = "github.com/RaduLupan/terraform-samples-aws//modules/vpc?ref=v0.0.1"
     
     region      = var.region
     vpcCidr     = "10.10.0.0/16"

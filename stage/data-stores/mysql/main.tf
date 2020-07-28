@@ -16,8 +16,11 @@ module "mysql" {
   # Local source.
   # source = "../../../modules/data-stores/mysql"
   
-  # Github source - public repository. Note that the double-slash in the Git URL is required.
-  source = "github.com/RaduLupan/terraform-samples-aws/modules/services//webserver-cluster?ref=v0.0.1"
+  # Github source - public repository. Note that the double-slash in the Git URL after the repository name is required.
+  # Also, the v0.0.1 tag had to be pushed using:
+  # git tag -a "v0.0.1" -m "First release"
+  # git push --follow-tags
+  source = "github.com/RaduLupan/terraform-samples-aws//modules/data-stores/mysql?ref=v0.0.1"
   
   region                  = var.region
   environment             = "stage"
