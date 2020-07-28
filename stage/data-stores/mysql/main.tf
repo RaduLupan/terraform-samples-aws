@@ -13,8 +13,12 @@ provider "aws" {
 }
 
 module "mysql" {
-  source = "../../../modules/data-stores/mysql"
-
+  # Local source.
+  # source = "../../../modules/data-stores/mysql"
+  
+  # Github source - public repository. Note that the double-slash in the Git URL is required.
+  source = "github.com/RaduLupan/terraform-samples-aws/modules/services//webserver-cluster?ref=v0.0.1"
+  
   region                  = var.region
   environment             = "stage"
   vpc_remote_state_bucket = "terraform-state-dev-us-east-2-fkaymsvstthc"
