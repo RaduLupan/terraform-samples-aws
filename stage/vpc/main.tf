@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.12"
+  required_version = ">= 0.12, < 0.13"
   
   # Partial configuration. The other arguments i.e. bucket, region, will be passed in from backend.hcl file. 
   # via terraform init -backend-config ../../backend.hcl.

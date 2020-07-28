@@ -1,5 +1,5 @@
 terraform {
-    required_version = ">= 0.12"
+    required_version = ">= 0.12, < 0.13"
 
     # Partial configuration.  
     # terraform init -backend-config ../../../backend.hcl will initialize the remote backend.
