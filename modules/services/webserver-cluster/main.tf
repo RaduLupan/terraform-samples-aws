@@ -37,26 +37,11 @@ locals {
   all_ips      = ["0.0.0.0/0"]
 }
 
-# Deploys a security group for the launch configuration with ingress rule to allow http traffic.
+# Deploys a security group for the launch configuration, no inline rules.
 resource "aws_security_group" "launch_config" {
   name        = "${var.cluster_name}-ec2-sg"
   description = "Allow HTTP inbound traffic"
   vpc_id      = local.vpc_id
-
-  ingress {
-    from_port   = var.server_port
-    to_port     = var.server_port
-    protocol    = local.tcp_protocol
-    cidr_blocks = local.all_ips
-  }
-  
-  ## Allow all outbound requests. Unlike creating an SG in the AWS console, egress rules are NOT automatically created!
-  egress {
-      from_port   = local.any_port
-      to_port     = local.any_port
-      protocol    = local.any_protocol
-      cidr_blocks = local.all_ips
-  }
 
   tags = {
     Name        = "allow-http"
@@ -65,32 +50,61 @@ resource "aws_security_group" "launch_config" {
   }
 }
 
-# Deploys a security group for the Application Load Balancer with ingress rule to allow http traffic.
+# Security group rules are defined as separate resources for more flexibility.
+resource "aws_security_group_rule" "allow_http_inbound_ec2" {
+  type              = "ingress"
+  security_group_id = aws_security_group.launch_config.id
+  
+  from_port   = var.server_port
+  to_port     = var.server_port
+  protocol    = local.tcp_protocol
+  cidr_blocks = local.all_ips
+}
+  
+# Allows all outbound requests. Unlike creating an SG in the AWS console, egress rules are NOT automatically created!
+resource "aws_security_group_rule" "allow_all_outbound_ec2" { 
+  type              = "egress"
+  security_group_id = aws_security_group.launch_config.id
+  
+  from_port   = local.any_port
+  to_port     = local.any_port
+  protocol    = local.any_protocol
+  cidr_blocks = local.all_ips
+}
+
+# Deploys a security group for the Application Load Balancer, no inline rules.
 resource "aws_security_group" "alb" {
   name        = "${var.cluster_name}-alb-sg"
   description = "Allow HTTP inbound traffic"
   vpc_id      = local.vpc_id
-
-  ingress {
-    from_port   = local.http_port
-    to_port     = local.http_port
-    protocol    = local.tcp_protocol
-    cidr_blocks = local.all_ips
-  }
-
-## Allow all outbound requests. Unlike creating an SG in the AWS console, egress rules are NOT automatically created!
-  egress {
-      from_port   = local.any_port
-      to_port     = local.any_port
-      protocol    = local.any_protocol
-      cidr_blocks = local.all_ips
-  }
 
   tags = {
     Name        = "allow-http"
     environment = var.environment
     terraform   = true
   }
+}
+ 
+# Security group rules are defined as separate resources for more flexibility.
+resource "aws_security_group_rule" "allow_http_inbound_alb" {
+  type              = "ingress"
+  security_group_id = aws_security_group.alb.id
+ 
+  from_port   = local.http_port
+  to_port     = local.http_port
+  protocol    = local.tcp_protocol
+  cidr_blocks = local.all_ips
+}
+
+# Allow all outbound requests. Unlike creating an SG in the AWS console, egress rules are NOT automatically created!
+resource "aws_security_group_rule" "allow_all_outbound_alb" { 
+  type              = "egress"
+  security_group_id = aws_security_group.alb.id
+  
+  from_port   = local.any_port
+  to_port     = local.any_port
+  protocol    = local.any_protocol
+  cidr_blocks = local.all_ips
 }
 
 # Use this data source to get the ID of a registered AMI for use in other resources.
