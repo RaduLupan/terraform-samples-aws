@@ -54,7 +54,7 @@ resource "aws_security_group" "launch_config" {
 resource "aws_security_group_rule" "allow_http_inbound_ec2" {
   type              = "ingress"
   security_group_id = aws_security_group.launch_config.id
-  
+ 
   from_port   = var.server_port
   to_port     = var.server_port
   protocol    = local.tcp_protocol
