@@ -35,4 +35,9 @@ module "webserver-cluster" {
     min_size                = 2
     max_size                = 10
     server_port             = 8080
+
+    custom_tags = {
+        owner      ="devops"
+        deployedby = "terraform"
+    }
 }
