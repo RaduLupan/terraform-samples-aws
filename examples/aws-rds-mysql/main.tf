@@ -1,5 +1,5 @@
 terraform {
-    required_version = ">= 0.12"
+    required_version = ">= 0.12, < 0.13"
 
     # Partial configuration.  
     # terraform init -backend-config ../../../backend.hcl will initialize the remote backend.
@@ -11,6 +11,9 @@ provider "aws" {
     version = "2.70.0"
     region  = var.region
 }
+
+# This template deploys the following AWS resources:
+# - 1 x RDS instance running MySQL in a private subnet
 
 # Use this data source to provide the set of subnet IDs in our VPC that are tagged tier=private
 data "aws_subnet_ids" "private_subnet" {
