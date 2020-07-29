@@ -175,6 +175,17 @@ resource "aws_autoscaling_group" "web" {
         value               = "${var.cluster_name}-instance"      
         propagate_at_launch = true
     }
+
+    # Dynamically generates inline tag blocks with for_each.
+    dynamic "tag" {
+      for_each = var.custom_tags
+
+      content {
+        key                 = tag.key
+        value               = tag.value
+        propagate_at_launch = true
+      }
+    }
 }
 
 # Use this data source to provide the set of subnet IDs in our VPC that are tagged tier=public.
