@@ -54,3 +54,9 @@ variable "server_port" {
     description = "Internal server port for HTTP"
     type        = number
 }
+
+variable "custom_tags" {
+    description = "Custom tags to set on the instances in the ASG"
+    type        = map(string)
+    default     = {}
+}
