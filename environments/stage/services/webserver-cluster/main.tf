@@ -22,7 +22,7 @@ module "webserver-cluster" {
     # Also, the v0.0.1 tag had to be pushed using:
     # git tag -a "v0.0.1" -m "First release"
     # git push --follow-tags
-    # source = "github.com/RaduLupan/terraform-samples-aws//modules/services/webserver-cluster?ref=v0.0.2"
+    # source = "github.com/RaduLupan/terraform-samples-aws//modules/services/webserver-cluster?ref=v0.0.3"
   
     region                  = var.region
     environment             = "stage"
