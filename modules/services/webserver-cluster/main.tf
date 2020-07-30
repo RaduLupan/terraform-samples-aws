@@ -188,6 +188,30 @@ resource "aws_autoscaling_group" "web" {
     }
 }
 
+# Deploys scale out autoscaling_schedule on condition that var.enable_autoscaling is true.
+resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {
+  count = var.enable_autoscaling ? 1 : 0
+
+  scheduled_action_name  = "${var.cluster_name}-scale-out-during-business-hours"
+  min_size               = 3
+  max_size               = 10
+  desired_capacity       = 3
+  recurrence             ="0 9 * * *"
+  autoscaling_group_name = aws_autoscaling_group.web.name
+}
+
+# Deploys scale in autoscaling_schedule on condition that var.enable_autoscaling is true.
+resource "aws_autoscaling_schedule" "scale_in_at_night" {
+  count = var.enable_autoscaling ? 1 : 0
+
+  scheduled_action_name  = "${var.cluster_name}-scale-out-during-business-hours"
+  min_size               = 1
+  max_size               = 10
+  desired_capacity       = 1
+  recurrence             ="0 17 * * *"
+  autoscaling_group_name = aws_autoscaling_group.web.name
+}
+
 # Use this data source to provide the set of subnet IDs in our VPC that are tagged tier=public.
 data "aws_subnet_ids" "public_subnet" {
   vpc_id = local.vpc_id
