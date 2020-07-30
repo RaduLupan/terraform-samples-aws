@@ -2,9 +2,9 @@ terraform {
     required_version = ">= 0.12, < 0.13"
 
     # Partial configuration.  
-    # terraform init -backend-config ../../../backend.hcl will initialize the remote backend.
+    # terraform init -backend-config ../../../../backend.hcl will initialize the remote backend.
     backend "s3" {  
-        key            = "stage/data-stores/mysql/terraform.tfstate"
+        key            = "environments/stage/data-stores/mysql/terraform.tfstate"
     }
 }
 provider "aws" {
@@ -14,7 +14,7 @@ provider "aws" {
 
 module "mysql" {
   # Local source.
-  # source = "../../../modules/data-stores/mysql"
+  # source = "../../../../modules/data-stores/mysql"
   
   # Github source - public repository. Note that the double-slash in the Git URL after the repository name is required.
   # Also, the v0.0.1 tag had to be pushed using:

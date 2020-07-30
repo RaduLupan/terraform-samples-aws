@@ -2,10 +2,10 @@ terraform {
   required_version = ">= 0.12, < 0.13"
   
   # Partial configuration. The other arguments i.e. bucket, region, will be passed in from backend.hcl file 
-  # via terraform init -backend-config ../../backend.hcl.
+  # via terraform init -backend-config ../../../backend.hcl.
   # Variables are not allowed in the backend block!
   backend "s3" {  
-    key            = "stage/services/webserver-cluster/terraform.tfstate"
+    key            = "environments/stage/services/webserver-cluster/terraform.tfstate"
   }
 }
 
@@ -16,7 +16,7 @@ provider "aws" {
 
 module "webserver-cluster" {
     # Local source
-    #source = "../../../modules/services/webserver-cluster"
+    #source = "../../../../modules/services/webserver-cluster"
     
     # Github source - public repository. Note that the double-slash in the Git URL after the repository name is required.
     # Also, the v0.0.1 tag had to be pushed using:
