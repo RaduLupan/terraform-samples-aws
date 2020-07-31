@@ -26,6 +26,8 @@ module "webserver-cluster" {
   
     region                  = var.region
     environment             = "stage"
+    ami                     = "ami-0a63f96e85105c6d3"
+    server_text             = "Hello from Zero Downtime Deployment"
     cluster_name            = "terraform-web"
     vpc_remote_state_bucket = "terraform-state-dev-us-east-2-fkaymsvstthc"
     vpc_remote_state_key    = "environments/stage/vpc/terraform.tfstate"

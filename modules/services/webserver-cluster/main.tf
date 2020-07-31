@@ -132,13 +132,14 @@ data "template_file" "user_data" {
         server_port = var.server_port
         db_address  = local.db_address
         db_port     = local.db_port
+        server_text = var.server_text
     }
 }
 
 # Deploys launch configuration for the web auto scaling group.
 resource "aws_launch_configuration" "asg_launch_config" {
-  name_prefix     = "lc-${var.cluster_name}-"
-  image_id        = data.aws_ami.ubuntu.id
+  name_prefix     = "lc-"
+  image_id        = var.ami
   instance_type   = var.instance_type
   security_groups = [aws_security_group.launch_config.id] 
   user_data       = data.template_file.user_data.rendered
@@ -160,7 +161,10 @@ data "aws_subnet_ids" "private_subnet" {
 }
 
 resource "aws_autoscaling_group" "web" {
+    # Explicitly depend on the launch configuration's name so each time it's replaced this ASG is also replaced.
+    name                 = "${var.cluster_name}-${aws_launch_configuration.asg_launch_config.name}"
     launch_configuration = aws_launch_configuration.asg_launch_config.name
+    
     # The list of private subnet IDs provided by the data source is fed to the vpc_zone_identifier argument.
     vpc_zone_identifier  = data.aws_subnet_ids.private_subnet.ids
 
@@ -169,6 +173,14 @@ resource "aws_autoscaling_group" "web" {
  
     min_size = var.min_size
     max_size = var.max_size
+
+    # Wait for at least this many instances to pass health checks before considering the ASG deployment complete.
+    min_elb_capacity = var.min_size
+
+    # When replacing this ASG, create the replacement first, and only delete the original after.
+    lifecycle {
+      create_before_destroy = true
+    }
 
     tag {
         key                 = "Name"

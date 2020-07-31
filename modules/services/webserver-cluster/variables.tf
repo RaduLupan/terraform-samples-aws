@@ -64,3 +64,16 @@ variable "custom_tags" {
 variable "enable_autoscaling" {
     description = "If set to true, enable auto scaling"
 }
+
+variable "ami" {
+    description = "The AMI to run in the cluster"
+    type        = string 
+    default     = "ami-0a63f96e85105c6d3"
+}
+
+variable "server_text" {
+    description = "The text the web server should return"
+    type        = string 
+    default     = "Hello, World"
+}
+
