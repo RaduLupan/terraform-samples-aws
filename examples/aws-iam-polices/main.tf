@@ -59,4 +59,3 @@ resource "aws_iam_user_policy_attachment" "neo_cloudwatch_read_only" {
     user       = data.aws_iam_user.neo.user_name
     policy_arn = aws_iam_policy.cloudwatch_read_only.arn
 }
-
