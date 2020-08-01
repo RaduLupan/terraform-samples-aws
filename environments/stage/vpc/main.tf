@@ -16,7 +16,7 @@ provider "aws" {
 
 module "vpc" {
     # Local source.
-    # source = "../../modules/vpc"
+    # source = "../../../modules/vpc"
 
     # Github source - public repository. Note that the double-slash in the Git URL after the repository name is required.
     # Also, the v0.0.1 tag had to be pushed using:
