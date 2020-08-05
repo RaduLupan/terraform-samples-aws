@@ -55,3 +55,27 @@ variable "ami" {
     type        = string 
     default     = "ami-0a63f96e85105c6d3"
 }
+
+variable "subnet_ids" {
+    description = "The subnet IDs to deploy to"
+    type        = list(string) 
+}
+
+variable "target_group_arns" {
+    description = "The ARNs of ELB target groups in which to register EC2 instances"
+    type        = list(string) 
+    default     []
+}
+
+variable "health_check_type" {
+    description = "The type of health check to perform: EC2 or ELB"
+    type        = string
+    default     "EC2"
+}
+
+variable "user_data" {
+    description = "The User Data script to run on each instance at boot"
+    type        = string
+    default     = null
+}
+
