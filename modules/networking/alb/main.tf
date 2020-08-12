@@ -57,21 +57,12 @@ resource "aws_security_group_rule" "allow_all_outbound_alb" {
   cidr_blocks = local.all_ips
 }
 
-# Use this data source to provide the set of subnet IDs in our VPC that are tagged tier=public.
-data "aws_subnet_ids" "public_subnet" {
-  vpc_id = local.vpc_id
-
-  tags = {
-    tier = "public"
-  }
-}
-
 # Deploys Application Load Balancer.
 resource "aws_lb" "web" {
     name               = "${var.alb_name}-alb"
     load_balancer_type = "application"
     # The list of public subnet IDs provided by the data source is fed to the subnets argument.
-    subnets            = data.aws_subnet_ids.public_subnet.ids
+    subnets            = var.subnet_ids
     security_groups    = [aws_security_group.alb.id]
 }
 

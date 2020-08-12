@@ -23,3 +23,8 @@ variable "vpc_remote_state_key" {
     type        = string
 }
 
+variable "subnet_ids" {
+    description = "The IDs for subnets that the ALB sits on"
+    type        = list(string)
+}
+
