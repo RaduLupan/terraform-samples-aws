@@ -64,13 +64,13 @@ variable "subnet_ids" {
 variable "target_group_arns" {
     description = "The ARNs of ELB target groups in which to register EC2 instances"
     type        = list(string) 
-    default     []
+    default     = []
 }
 
 variable "health_check_type" {
     description = "The type of health check to perform: EC2 or ELB"
     type        = string
-    default     "EC2"
+    default     = "EC2"
 }
 
 variable "user_data" {
@@ -78,4 +78,8 @@ variable "user_data" {
     type        = string
     default     = null
 }
-
+variable "server_port" {
+    description = "Internal server port for HTTP"
+    type        = number
+    default     = 8080
+}
