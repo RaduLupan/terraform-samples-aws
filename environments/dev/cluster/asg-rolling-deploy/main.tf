@@ -22,7 +22,7 @@ module "asg" {
     cluster_name            = "terraform-web"
     ami                     = "ami-0a63f96e85105c6d3" 
     vpc_remote_state_bucket = "terraform-state-dev-us-east-2-fkaymsvstthc"
-    vpc_remote_state_key    = "environments/stage/vpc/terraform.tfstate"
+    vpc_remote_state_key    = "environments/dev/vpc/terraform.tfstate"
     instance_type           = "t3.micro"
     min_size                = 2
     max_size                = 10
