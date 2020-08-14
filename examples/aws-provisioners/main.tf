@@ -66,7 +66,13 @@ resource "aws_instance" "example" {
     }
 }
 
+# Provisioners with null_resource let you run scripts as part of the Terraform life cycle, but without being attached to any real resource.
 resource "null_resource" "example" {
+
+    # Use UUID to force this null_resource to be created on every call to 'terraform apply'.
+    triggers = {
+        uuid = uuid()
+    }
     provisioner "local-exec" {
         command = "echo \"Hello, World from $(uname -smp)\""
     }
