@@ -1,20 +1,8 @@
 # This template deploys the following AWS resources:
 # - 1 x Internet-facing Application Load Balancer into existing VPC
 
-# Use this data source to get the VPC Id output from the remote state file of the vpc module.
-data "terraform_remote_state" "vpc" {
-    backend = "s3"
-
-    config = {
-        bucket = var.vpc_remote_state_bucket
-        key    = var.vpc_remote_state_key
-        region = var.region
-    }
-}
-
 # Calculated local values.
 locals {
-  vpc_id       = data.terraform_remote_state.vpc.outputs.vpc-id
   http_port    = 80
   any_port     = 0
   any_protocol = "-1"
@@ -22,11 +10,17 @@ locals {
   all_ips      = ["0.0.0.0/0"]
 }
 
+# Use this resource to extract the vpc_id from the first elelment of subnet_ids array.
+data "aws_subnet" "selected" {
+  id = var.subnet_ids[0]
+}
+
 # Deploys a security group for the Application Load Balancer, no inline rules.
 resource "aws_security_group" "alb" {
   name        = "${var.alb_name}-alb-sg"
   description = "Allow HTTP inbound traffic"
-  vpc_id      = local.vpc_id
+  # Place the security group in the same VPC with the subnets the ALB sits on.
+  vpc_id      = data.aws_subnet.selected.vpc_id
 
   tags = {
     Name        = "allow-http"
