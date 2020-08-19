@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"testing"
 	"time"
-	"github.com/gruntwork-io/terratest/modules/http-helper"
+
+	http_helper "github.com/gruntwork-io/terratest/modules/http-helper"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
@@ -13,7 +14,7 @@ func TestAlbExample(t *testing.T) {
 		TerraformDir: "../../../terraform-samples-aws/examples/alb",
 	}
 
-	// Clean up everything at the end of the test
+	// Clean up everything at the end of the test. Defer ensures that this runs regardless of the exit code of the function.
 	defer terraform.Destroy(t, opts)
 
 	// Deploy the example
