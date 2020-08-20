@@ -1,4 +1,4 @@
-output "db-endpoint" {
+output "address" {
     description = "Database endpoint"
     value       = aws_db_instance.db1.address
 }
