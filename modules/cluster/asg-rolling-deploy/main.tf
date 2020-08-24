@@ -2,20 +2,14 @@
 # - 1 x Auto Scaling Group of EC2 instances running Ubuntu.
 # The ASG is configured to do zero downtime deployments.
 
-# Use this data source to get the VPC Id output from the remote state file of the vpc module.
-data "terraform_remote_state" "vpc" {
-    backend = "s3"
-
-    config = {
-        bucket = var.vpc_remote_state_bucket
-        key    = var.vpc_remote_state_key
-        region = var.region
-    }
+# Use this data source to get info about a subnet, in this case extract the vpc_id.
+data "aws_subnet" "selected" {
+  id = var.subnet_ids[0]
 }
 
 # Calculated local values.
 locals {
-  vpc_id       = data.terraform_remote_state.vpc.outputs.vpc-id
+  vpc_id       = data.aws_subnet.selected.vpc_id
   http_port    = 80
   any_port     = 0
   any_protocol = "-1"
@@ -78,7 +72,6 @@ resource "aws_autoscaling_group" "web" {
     name                 = "${var.cluster_name}-${aws_launch_configuration.asg_launch_config.name}"
     launch_configuration = aws_launch_configuration.asg_launch_config.name
     
-    # The list of private subnet IDs provided by the data source is fed to the vpc_zone_identifier argument.
     vpc_zone_identifier  = var.subnet_ids
 
     # Configure integrations with a load balancer
