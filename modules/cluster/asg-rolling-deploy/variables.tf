@@ -1,7 +1,10 @@
+#----------------------------------------------------------------------------
+# REQUIRED PARAMETERS: You must provide a value for each of these parameters.
+#----------------------------------------------------------------------------
+
 variable "region" {
     description = "AWS Region"
     type        = string
-
 }
 
 variable "environment" {
@@ -14,20 +17,14 @@ variable "cluster_name" {
     type          = string
 }
 
-variable "vpc_remote_state_bucket" {
-    description = "The name of the S3 bucket for the VPC's remote state"
-    type        = string
-}
-
-variable "vpc_remote_state_key" {
-    description = "The path for the VPC's remote state in S3"
-    type        = string
+variable "ami" {
+    description = "The AMI to run in the cluster"
+    type        = string 
 }
 
 variable "instance_type" {
     description = "EC2 instance type"
     type        = string
-    default     = "t3.micro"
 }
 
 variable "min_size" {
@@ -40,26 +37,18 @@ variable "max_size" {
     type        = number
 }
 
-variable "custom_tags" {
-    description = "Custom tags to set on the instances in the ASG"
-    type        = map(string)
-    default     = {}
+variable "subnet_ids" {
+    description = "The subnet IDs to deploy to"
+    type        = list(string) 
 }
 
 variable "enable_autoscaling" {
     description = "If set to true, enable auto scaling"
 }
 
-variable "ami" {
-    description = "The AMI to run in the cluster"
-    type        = string 
-    default     = "ami-0a63f96e85105c6d3"
-}
-
-variable "subnet_ids" {
-    description = "The subnet IDs to deploy to"
-    type        = list(string) 
-}
+#---------------------------------------------------------------
+# OPTIONAL PARAMETERS: These parameters have resonable defaults.
+#---------------------------------------------------------------
 
 variable "target_group_arns" {
     description = "The ARNs of ELB target groups in which to register EC2 instances"
@@ -78,6 +67,13 @@ variable "user_data" {
     type        = string
     default     = null
 }
+
+variable "custom_tags" {
+    description = "Custom tags to set on the instances in the ASG"
+    type        = map(string)
+    default     = {}
+}
+
 variable "server_port" {
     description = "Internal server port for HTTP"
     type        = number
