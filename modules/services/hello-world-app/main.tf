@@ -88,10 +88,6 @@ module "asg" {
     ami                     = var.ami
     user_data               = data.template_file.user_data.rendered
 
-    ### TO DO: Need to refactor ASG to eliminate dependency on VPC module.
-    vpc_remote_state_bucket = "terraform-state-dev-us-east-2-fkaymsvstthc"
-    vpc_remote_state_key    = "environments/dev/vpc/terraform.tfstate"
-
     instance_type           = var.instance_type
     min_size                = var.min_size
     max_size                = var.max_size
@@ -105,12 +101,7 @@ module "asg" {
 module "alb" {
     source = "../../networking/alb"
    
-    region                  = var.region
     environment             = "dev"
     alb_name                = "hello-world-${var.environment}"
     subnet_ids              = local.public_subnet_ids
-    
-    ### TO DO: Need to refactor ALB to eliminate dependency on vpc module.
-    vpc_remote_state_bucket = "terraform-state-dev-us-east-2-fkaymsvstthc"
-    vpc_remote_state_key    = "environments/dev/vpc/terraform.tfstate"
 }
