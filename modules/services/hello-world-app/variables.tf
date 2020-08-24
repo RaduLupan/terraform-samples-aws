@@ -56,13 +56,13 @@ variable "vpc_id" {
 
 variable "public_subnet_ids" {
     description = "The IDs of the public subnets to deploy the ALB into"
-    type        = string
+    type        = list(string)
     default     = null
 }
 
 variable "private_subnet_ids" {
     description = "The IDs of the private subnets to deploy the EC2 instances into"
-    type        = string
+    type        = list(string)
     default     = null
 }
 
@@ -80,12 +80,11 @@ variable "db_remote_state_key" {
 
 variable "mysql_config" {
     description = "The config for the MySQL DB"
-    # This object type matches the output types of the mysql module.
-    type        = object({
+    type        = object( {
         address = string
         port    = number
-    })
-    default     null
+    } )
+    default     = null
 }
 
 variable "instance_type" {
