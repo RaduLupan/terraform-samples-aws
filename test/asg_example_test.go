@@ -6,7 +6,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
-func TestAlbExample(t *testing.T) {
+func TestAsgExample(t *testing.T) {
 	opts := &terraform.Options{
 		TerraformDir: "../../../terraform-samples-aws/examples/asg",
 	}
