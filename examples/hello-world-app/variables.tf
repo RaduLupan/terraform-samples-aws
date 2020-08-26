@@ -17,3 +17,9 @@ variable "mysql_config" {
         port    = 12345
     }
 }
+
+variable "environment" {
+    description   = "Environment i.e. dev, test, stage, prod" 
+    type          = string
+    default       = "example"
+}

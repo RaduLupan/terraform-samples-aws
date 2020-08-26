@@ -11,7 +11,7 @@ module "hello_world_app" {
     source = "../../modules/services/hello-world-app"
     
     region                  = var.region
-    environment             = "dev"
+    environment             = var.environment
        
     min_size                = 2
     max_size                = 10
