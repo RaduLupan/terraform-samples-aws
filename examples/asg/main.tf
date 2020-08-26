@@ -13,7 +13,7 @@ module "asg" {
     region                  = var.region
     environment             = "dev"
 
-    cluster_name            = "example-asg"
+    cluster_name            = var.cluster_name
     
     ami                     = "ami-0bbe28eb2173f6167"    
     instance_type           = "t3.micro"
