@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 
@@ -10,14 +11,19 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
-func TestAlbExample(t *testing.T) {
+func TestHelloWorldAppExample(t *testing.T) {
 	t.Parallel()
 
 	opts := &terraform.Options{
-		TerraformDir: "../../../terraform-samples-aws/examples/alb",
+		// You should update this relative path to point at your hello-world-app example directory!
+		TerraformDir: "../../../terraform-samples-aws/examples/hello-world-app",
 
 		Vars: map[string]interface{}{
-			"alb_name": fmt.Sprintf("test-%s", random.UniqueId()),
+			"mysql_config": map[string]interface{}{
+				"address": "mock-value-for-test",
+				"port":    3306,
+			},
+			"environment": fmt.Sprintf("test-%s", random.UniqueId()),
 		},
 	}
 
@@ -31,19 +37,17 @@ func TestAlbExample(t *testing.T) {
 	albDNSName := terraform.OutputRequired(t, opts, "alb_dns_name")
 	url := fmt.Sprintf("http://%s", albDNSName)
 
-	// Test that the ALB's default action is working and returns a 404
-	expectedStatus := 404
-	expectedBody := "404: page not found"
-
 	maxRetries := 10
 	timeBetweenRetries := 10 * time.Second
 
-	http_helper.HttpGetWithRetry(
+	http_helper.HttpGetWithRetryWithCustomValidation(
 		t,
 		url,
-		expectedStatus,
-		expectedBody,
 		maxRetries,
 		timeBetweenRetries,
+		func(status int, body string) bool {
+			return status == 200 &&
+				strings.Contains(body, "Hello, World")
+		},
 	)
 }
