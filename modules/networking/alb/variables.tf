@@ -1,3 +1,7 @@
+#----------------------------------------------------------------------------
+# REQUIRED PARAMETERS: You must provide a value for each of these parameters.
+#----------------------------------------------------------------------------
+
 variable "environment" {
     description   = "Environment i.e. dev, test, stage, prod" 
     type          = string
