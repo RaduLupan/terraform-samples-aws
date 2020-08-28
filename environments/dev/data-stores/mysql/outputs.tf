@@ -1,9 +1,11 @@
 # Database endpoint output from mysql module
-output "db-endpoint" {
-    value = module.mysql.db-endpoint
+output "address" {
+    description = "Database endpoint"
+    value       = module.mysql.address
 }
 
 # The port output from mysql module
 output "port" {
-    value = module.mysql.port
+    description = "The port the database is listening on"
+    value       = module.mysql.port
 }
