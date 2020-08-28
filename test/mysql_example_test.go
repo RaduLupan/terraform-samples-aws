@@ -15,7 +15,8 @@ func TestMySQLExample(t *testing.T) {
 		TerraformDir: "../../../terraform-samples-aws/examples/mysql",
 
 		Vars: map[string]interface{}{
-			"db_name":     fmt.Sprintf("test-%s", random.UniqueId()),
+			// RDS DB name won't allow "-" use "_" instead as a separator.
+			"db_name":     fmt.Sprintf("test_%s", random.UniqueId()),
 			"db_password": "password",
 		},
 	}
