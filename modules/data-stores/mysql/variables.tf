@@ -17,6 +17,11 @@ variable "db_name" {
     type        = string
 }
 
+variable "db_username" {
+    description = "The admin username for the database"
+    type        = string
+}
+
 variable "db_password" {
     description = "The admin password for the database"
     type        = string
