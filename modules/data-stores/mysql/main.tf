@@ -5,7 +5,7 @@
 locals {
   vpc_id = (
     var.subnet_ids == null
-      ? data.terraform_remote_state.vpc[0].outputs.vpc-id
+      ? data.terraform_remote_state.vpc[0].outputs.vpc_id
       : data.aws_subnet.selected[0].vpc_id
   )
   subnet_ids = (
