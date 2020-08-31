@@ -1,4 +1,5 @@
 # VPC Id output from vpc module
-output "vpc-id" {
-    value       = module.vpc.vpc-id
+output "vpc_id" {
+    description = "The ID of the VPC"
+    value       = module.vpc.vpc_id
 }

@@ -18,6 +18,6 @@ module "vpc" {
     source = "../../../modules/vpc"
    
     region      = var.region
-    vpcCidr     = "10.10.0.0/16"
-    environment = "dev"
+    vpcCidr     = var.vpcCidr
+    environment = var.environment
 }
