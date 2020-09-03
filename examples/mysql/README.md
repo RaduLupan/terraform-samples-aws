@@ -2,7 +2,7 @@
 
 This folder contains a Terraform configuration that shows an example of how to use the [mysql module](../../modules/data-stores/mysql) to deploy a managed MySQL instance in an Amazon Web Services (AWS) account.
 
-This particular example uses the [default VPC](https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html) in the region to deploy the MySQL instance in which means that the MySQL endpoint is public. However, if you feed private subnet IDs of an existing VPC in the `subnet_ids` variable it will make your MySQL endpoint private.
+This particular example uses the [default VPC](https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html) in the [AWS region](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html#Concepts.RegionsAndAvailabilityZones.Regions) to deploy the MySQL instance in which means that the MySQL endpoint is public. However, if you feed private subnet IDs of an existing VPC in the `subnet_ids` variable it will make your MySQL endpoint private.
 
 See the [dev environment](../../environments/dev/data-stores/mysql) configuration for an example on how to create the MySQL instance as private endpoint in a custom VPC.
 
