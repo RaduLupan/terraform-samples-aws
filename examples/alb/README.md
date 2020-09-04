@@ -2,7 +2,7 @@
 
 This folder contains a Terraform configuration that shows an example of how to use the [alb module](../../modules/networking/alb) to deploy an Application Load Balancer  in an Amazon Web Services (AWS) account.
 
-This particular example uses the [default VPC](https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html) in the [AWS region](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/) to deploy the ALB in which in effect makes the ALB Internet-facing. However, if you feed private subnet IDs of an existing VPC in the `subnet_ids` variable it will make your ALB private.
+This particular example uses the [default VPC](https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html) in the [AWS region](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/) to deploy the ALB in which in effect makes the ALB Internet-facing. However, if you feed private subnet IDs of a custom VPC in the `subnet_ids` variable it will make your ALB private.
 
 ## Pre-requisites
 
