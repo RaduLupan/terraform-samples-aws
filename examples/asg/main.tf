@@ -7,6 +7,15 @@ provider "aws" {
     region  = "us-east-2"
 }
 
+# Calculated local values. 
+locals {
+
+    # The subnet IDs are either extracted from the default VPC or specified in var.subnet_ids variable.
+    subnet_ids = (var.subnet_ids == null ? 
+                 data.aws_subnet_ids.default[0].ids : var.subnet_ids            
+    )
+}
+
 module "asg" {
     source = "../../modules/cluster/asg-rolling-deploy"
     
@@ -22,5 +31,5 @@ module "asg" {
     max_size                = 1 
     enable_autoscaling      = false
     
-    subnet_ids              = data.aws_subnet_ids.default.ids
+    subnet_ids              = local.subnet_ids
 }
