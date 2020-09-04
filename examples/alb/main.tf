@@ -12,5 +12,5 @@ module "alb" {
     
     environment             = "dev"
     alb_name                = var.alb_name
-    subnet_ids              = data.aws_subnet_ids.default.ids
+    subnet_ids              = data.aws_subnet_ids.default[0].ids
 }

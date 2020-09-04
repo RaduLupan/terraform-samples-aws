@@ -1,8 +1,12 @@
 data "aws_vpc" "default" {
+    count = var.subnet_ids == null ? 1 : 0
+
     default = true
 }
 
 # The subnets from the default VPC are good enough for testing the ALB module.
 data "aws_subnet_ids" "default" {
-    vpc_id = data.aws_vpc.default.id
+    count = var.subnet_ids == null ? 1 : 0
+
+    vpc_id = data.aws_vpc.default[0].id
 }
