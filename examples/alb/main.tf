@@ -12,5 +12,8 @@ module "alb" {
     
     environment             = "dev"
     alb_name                = var.alb_name
+    
+    # Uses the subnet_ids for the default VPC. For a custom VPC simply list the subnet IDs like that subnet_ids = ["subnet_id_1","subnet_id_2"].
     subnet_ids              = data.aws_subnet_ids.default[0].ids
+    
 }
