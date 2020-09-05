@@ -2,7 +2,7 @@
 locals {
   vpc_id       = (
     var.vpc_id == null 
-      ? data.terraform_remote_state.vpc[0].outputs.vpc-id
+      ? data.terraform_remote_state.vpc[0].outputs.vpc_id
       : var.vpc_id
   )
   
