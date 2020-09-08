@@ -1,6 +1,6 @@
 # Hello-world app example - dev environment
 
-This folder contains an example Terraform configuration that uses the [hello-world-app module](../../../../modules/services/hello-world-app) to deploy a simple "Hello, World" application accross a cluster of web servers (using [EC2]((https://aws.amazon.com/ec2/)) and [Auto Scaling](https://aws.amazon.com/autoscaling)) in an Amazon Web Services (AWS) account.
+This folder contains an example Terraform configuration that uses the [hello-world-app module](../../../../modules/services/hello-world-app) to deploy a simple "Hello, World" application accross a cluster of web servers (using [EC2](https://aws.amazon.com/ec2/)) and [Auto Scaling](https://aws.amazon.com/autoscaling)) in an Amazon Web Services (AWS) account.
 
 ## Pre-requisites
 
