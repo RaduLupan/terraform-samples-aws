@@ -19,5 +19,5 @@ module "vpc" {
    
     region      = var.region
     vpcCidr     = "10.20.0.0/16"
-    environment = var.environment
+    environment = "stage"
 }
