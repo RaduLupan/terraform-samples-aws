@@ -6,7 +6,7 @@ This folder contains an example Terraform configuration that uses the [vpc modul
 
 * [Amazon Web Services (AWS) account](http://aws.amazon.com/).
 * Terraform 0.12 or later installed on your computer. Check out HasiCorp [documentation](https://learn.hashicorp.com/terraform/azure/install) on how to install Terraform.
-* A Terraform remote backend consisting of 1 x S3 bucket to store the Terraform state and 1 x DynamoDB table to manage the locks. You can use [this](../../../../examples/standalone/tfstate-remote-backend-aws) example configuration to create the remote backend. The name of the S3 bucket and the name of the DynamoDB table need to be saved in the [`backend.hcl`](../../../../backend.hcl) file.
+* A Terraform remote backend consisting of 1 x S3 bucket to store the Terraform state and 1 x DynamoDB table to manage the locks. You can use [this](../../../../examples/standalone/tfstate-remote-backend-aws) example configuration to create the remote backend. Fill in the name of the S3 bucket and the name of the DynamoDB table in to the [`backend.hcl`](../../../../backend.hcl) file.
 
 Please note that this code was written for Terraform 0.12.x.
 
