@@ -4,7 +4,7 @@ This folder contains a Terraform configuration that shows an example of how to u
 
 This particular example uses the [default VPC](https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html) in the [AWS region](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/) to deploy the ASG in which in effect makes the EC2 instances public. However, if you feed private subnet IDs of a custom VPC in the `subnet_ids` variable it will make your ASG private.
 
-The default value provided for the `mysql_config` variable allows for mocking the MySQL database. Check out the [dev environment](../../environments/dev/services/hello-world-app) for an example on how to integrate with a custom MySQL database.
+The default value provided for the `mysql_config` variable allows for mocking the MySQL database. Check out the [dev environment](../../environments/dev/services/hello-world-app) for an example of how to connect to a custom MySQL database.
 ## Pre-requisites
 
 * [Amazon Web Services (AWS) account](http://aws.amazon.com/).
