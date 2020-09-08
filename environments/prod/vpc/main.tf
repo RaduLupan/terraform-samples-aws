@@ -15,9 +15,16 @@ provider "aws" {
 }
 
 module "vpc" {
-    source = "../../../modules/vpc"   
+    
+    # Github source - public repository. Note that the double-slash in the Git URL after the repository name is required.
+    # Also, the v0.0.3 tag had to be pushed using:
+    # git tag -a "v0.0.3" -m "First release"
+    # git push --follow-tags
+
+    source = "github.com/RaduLupan/terraform-samples-aws//modules/vpc?ref=v0.0.3"
+    
     
     region      = var.region
-    vpcCidr     = "10.20.0.0/16"
+    vpcCidr     = "10.30.0.0/16"
     environment = "prod"
 }
