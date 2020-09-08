@@ -30,7 +30,7 @@ $ terraform init
 $ terraform apply
 ```
 
-Clean up when you're done:
+Clean up when you are done:
 
 ```
 $ terraform destroy
