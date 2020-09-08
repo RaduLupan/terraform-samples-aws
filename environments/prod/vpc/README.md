@@ -1,6 +1,6 @@
 # VPC example - prod environment
 
-This folder contains an example Terraform configuration that uses the [vpc module](https://github.com/RaduLupan/terraform-samples-aws/tree/v0.0.3/modules/vpc) to deploy a custom Virtual Private Cloud (VPC) in an Amazon Web Services (AWS) account.
+This folder contains an example Terraform configuration that uses the [vpc module](https://github.com/RaduLupan/terraform-samples-aws/tree/v0.0.3/modules/vpc)(tagged commit v0.0.3) to deploy a custom Virtual Private Cloud (VPC) in an Amazon Web Services (AWS) account.
 
 ## Pre-requisites
 
