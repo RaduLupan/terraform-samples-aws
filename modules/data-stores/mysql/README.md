@@ -10,4 +10,4 @@ This folder contains a Terraform configuration that defines a module for deployi
 
 Terraform modules are not meant to be deployed directly. Instead, they are invoked from within other Terraform configurations. 
 * See [environments/dev/data-stores/mysql](../../../environments/dev/data-stores/mysql) and [environments/stage/data-stores/mysql](../../../environments/stage/data-stores/mysql) for examples on how to invoke the MySQL module from a local source.
-* See [environments/prod/data-stores/mysql](../../..environments/prod/data-stores/mysql) for example on how to invoke the VPC module from a Github source.
+* See [environments/prod/data-stores/mysql](../../../environments/prod/data-stores/mysql) for example on how to invoke the VPC module from a Github source.
