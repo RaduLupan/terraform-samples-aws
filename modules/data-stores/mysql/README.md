@@ -4,7 +4,7 @@ This folder contains a Terraform configuration that defines a module for deployi
 
 * If the `subnet_ids` variable is set to null, the MySQL instance will be deployed on the [default VPC](https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html) in the current [AWS region](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html), which makes the MySQL instance endpoint public.  
 * If the `subnet_ids` variable is pointing to public subnet IDs in a custom VPC then the MySQL instance endpoint will be public.
-* If the `subnet_ids` variable is pointing to private subnet IDs in a custom VPC then MySQL instance endpoint will be public.
+* If the `subnet_ids` variable is pointing to private subnet IDs in a custom VPC then MySQL instance endpoint will be private.
 
 ## Quick start
 
