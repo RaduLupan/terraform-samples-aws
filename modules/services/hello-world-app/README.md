@@ -6,4 +6,4 @@ This folder contains an example Terraform configuration that defines a module fo
 
 Terraform modules are not meant to be deployed directly. Instead, they are invoked from within other Terraform configurations. 
 * See [environments/dev/services/hello-world-app](../../../environments/dev/services/hello-world-app) and [environments/stage/services/hello-world-app](../../../environments/stage/services/hello-world-app) for examples on how to invoke the Hello-World-App module from a local source.
-* See [environments/prod/services/web-cluster](../../../environments/prod/services/web-cluster) for example on how to invoke the Hello-World-App module from a Github source.
+* See [environments/prod/services/webserver-cluster](../../../environments/prod/services/webserver-cluster) for example on how to invoke the Hello-World-App module from a Github source.
