@@ -7,7 +7,7 @@ Unlike, in the book however, I do not deploy all resources in the [default VPC](
 
 ## Quick start
 
-If you haven't read the **Terraform Up & Running** book, you can still run the code of copurse. Make sure you consult the README in each folder for instructions.
+If you haven't read the **Terraform Up & Running** book, you can still run the code, of course. Make sure you consult the README in each folder for instructions.
 
 ## Resources
 [Terraform Up and Running Code](https://github.com/brikis98/terraform-up-and-running-code)
