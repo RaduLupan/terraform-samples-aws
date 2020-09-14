@@ -11,4 +11,5 @@ If you haven't read the **Terraform Up & Running** book, you can still run the c
 
 ## Resources
 [Terraform Up and Running Code](https://github.com/brikis98/terraform-up-and-running-code)
+
 [Terratest](https://github.com/gruntwork-io/terratest)
