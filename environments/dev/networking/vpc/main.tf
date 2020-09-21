@@ -1,11 +1,15 @@
 terraform {
   required_version = ">= 0.12, < 0.13"
   
-  # Partial configuration. The other arguments i.e. bucket, region, will be passed in from backend.hcl file. 
-  # via terraform init -backend-config ../../../backend.hcl.
-  # Variables are not allowed in the backend block!
   backend "s3" {  
-    key            = "environments/dev/vpc/terraform.tfstate"
+    # This backend configuration is filled in automatically at test time by Terratest. If you wish to run this example
+    # manually, uncomment and fill in the config below.
+
+    # bucket         = "<YOUR S3 BUCKET>"       
+    # key            = "<SOME PATH>/terraform.tfstate"
+    # region         = "<YOUR S3 BUCKET REGION>"  
+    # dynamodb_table = "<YOUR DYNAMODB TABLE>"       
+    # encrypt        = true
   }
 }
 
