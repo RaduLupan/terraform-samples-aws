@@ -18,12 +18,15 @@ module "hello-world-app" {
     source = "../../../../modules/services/hello-world-app"
     
     region                  = var.region
-    environment             = "dev"
+    environment             = var.environment
     cluster_name            = "terraform-web"
-    vpc_remote_state_bucket = "terraform-state-dev-us-east-2-fkaymsvstthc"
-    vpc_remote_state_key    = "environments/dev/vpc/terraform.tfstate"
-    db_remote_state_bucket  = "terraform-state-dev-us-east-2-fkaymsvstthc"
-    db_remote_state_key     = "environments/dev/data-stores/mysql/terraform.tfstate"
+    
+    vpc_remote_state_bucket = var.vpc_remote_state_bucket
+    vpc_remote_state_key    = var.vpc_remote_state_key
+    
+    db_remote_state_bucket  = var.db_remote_state_bucket
+    db_remote_state_key     = var.db_remote_state_key
+    
     instance_type           = "t3.micro"
     min_size                = 2
     max_size                = 10
