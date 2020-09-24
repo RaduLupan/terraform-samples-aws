@@ -11,4 +11,4 @@ This folder contains a Terraform configuration that defines a module for deployi
 
 Terraform modules are not meant to be deployed directly. Instead, they are invoked from within other Terraform configurations. 
 * See [environments/dev/networking/vpc](../../../environments/dev/networking/vpc) and [environments/stage/networking/vpc](../../../environments/stage/networking/vpc) for examples on how to invoke the VPC module from a local source.
-* See [environments/prod/networking/vpc](../../../environments/prod/networking/vpc) for example on how to invoke the VPC module from a Github source.
+* See [environments/prod/networking/vpc](../../../environments/prod/vpc) for example on how to invoke the VPC module from a Github source.
