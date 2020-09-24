@@ -7,6 +7,7 @@ variable "region" {
     type        = string
     default     = "us-east-2"
 
+<<<<<<< HEAD
 }
 
 variable "environment" {
@@ -43,4 +44,6 @@ variable "db_remote_state_key" {
     description = "The path for the DB's remote state in S3"
     type        = string
     default     = null
+=======
+>>>>>>> parent of c3c6353... Reorganized variables
 }
